@@ -1,6 +1,8 @@
 import numpy as np
 import pickle
 import pandas as pd
+from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
 from collections import Counter
 
 class DecisionTree:
@@ -135,15 +137,6 @@ class RandomForest:
         return np.array([Counter(predictions[:, i]).most_common(1)[0][0] 
                         for i in range(X.shape[0])])
 
-import numpy as np
-import pickle
-import pandas as pd
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
-from collections import Counter
-
-# Decision Tree and Random Forest Classes (same as in your code)
-
 # Function to load and preprocess data
 def load_and_preprocess_data(file_path):
     """Load and preprocess the data"""
@@ -198,8 +191,7 @@ def train_evaluate_random_forest(train_file, sample_size=10000, test_size=0.1, v
     print(classification_report(y_mini_test, mini_test_predictions))
 
     return rf
-
-
+    
 # 1. Load the Training Data from 'train_data.pkl'
 with open('/kaggle/input/ift3395-ift6390-identification-maladies-retine/train_data.pkl', 'rb') as f:
     train_data = pickle.load(f)
