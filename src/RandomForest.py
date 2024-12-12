@@ -135,6 +135,15 @@ class RandomForest:
         return np.array([Counter(predictions[:, i]).most_common(1)[0][0] 
                         for i in range(X.shape[0])])
 
+import numpy as np
+import pickle
+import pandas as pd
+from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
+from collections import Counter
+
+# Decision Tree and Random Forest Classes (same as in your code)
+
 # Function to load and preprocess data
 def load_and_preprocess_data(file_path):
     """Load and preprocess the data"""
@@ -152,41 +161,57 @@ def load_and_preprocess_data(file_path):
         return X, y
     return X
 
-# Training and prediction script
-def train_and_predict(train_file, test_file, sample_size=10000):
-    # Load training data
-    X_train, y_train = load_and_preprocess_data(train_file)
-    
-    # Sample subset of training data
-    if sample_size and sample_size < len(X_train):
-        indices = np.random.choice(len(X_train), sample_size, replace=False)
-        X_train = X_train[indices]
-        y_train = y_train[indices]
-    
-    # Initialize and train the random forest
+# Function to train and evaluate the model
+def train_evaluate_random_forest(train_file, sample_size=10000, test_size=0.1, val_size=0.1):
+    # Load and preprocess training data
+    X, y = load_and_preprocess_data(train_file)
+
+    # Sample subset of training data if sample_size is specified
+    if sample_size and sample_size < len(X):
+        indices = np.random.choice(len(X), sample_size, replace=False)
+        X = X[indices]
+        y = y[indices]
+
+    # Split into training, validation, and mini test sets
+    X_train_val, X_mini_test, y_train_val, y_mini_test = train_test_split(
+        X, y, test_size=test_size, random_state=42, stratify=y)
+
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train_val, y_train_val, test_size=val_size, random_state=42, stratify=y_train_val)
+
+    print(f"Training set size: {len(X_train)}")
+    print(f"Validation set size: {len(X_val)}")
+    print(f"Mini test set size: {len(X_mini_test)}")
+
+    # Train the Random Forest
     rf = RandomForest(n_trees=10, max_depth=10, min_samples_split=5)
     rf.fit(X_train, y_train)
-    
-    # Load and preprocess test data
-    X_test = load_and_preprocess_data(test_file)
-    
-    # Make predictions
-    predictions = rf.predict(X_test)
-    
-    # Create submission file
-    submission = pd.DataFrame({
-        'ID': range(1, len(predictions) + 1),
-        'Class': predictions
-    })
-    
-    # Save predictions
-    submission.to_csv('random_forest_predictions4.csv', index=False)
-    return rf, submission
+
+    # Evaluate on validation set
+    val_predictions = rf.predict(X_val)
+    print("Validation Set Classification Report:\n")
+    print(classification_report(y_val, val_predictions))
+
+    # Evaluate on mini test set
+    mini_test_predictions = rf.predict(X_mini_test)
+    print("Mini Test Set Classification Report:\n")
+    print(classification_report(y_mini_test, mini_test_predictions))
+
+    return rf
 
 
-# Train the model and generate predictions
-rf_model, predictions = train_and_predict(
-    train_file=r'data\train_data.pkl',
-    test_file=r'data\test_data.pkl',
-    sample_size=100000  # Adjust this based on your computational resources
-)
+# 1. Load the Training Data from 'train_data.pkl'
+with open('/kaggle/input/ift3395-ift6390-identification-maladies-retine/train_data.pkl', 'rb') as f:
+    train_data = pickle.load(f)
+
+# Run the training and evaluation
+def main():
+    rf_model = train_evaluate_random_forest(
+        train_file=r'/kaggle/input/ift3395-ift6390-identification-maladies-retine/train_data.pkl',
+        sample_size=100000,  # Adjust based on resources
+        test_size=0.1,  # 10% for mini test set
+        val_size=0.1   # 10% of remaining for validation set
+    )
+
+if __name__ == "__main__":
+    main()
