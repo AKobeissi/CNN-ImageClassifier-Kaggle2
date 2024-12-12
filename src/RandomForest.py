@@ -192,10 +192,13 @@ def train_evaluate_random_forest(train_file, sample_size=10000, test_size=0.1, v
 
     return rf
     
-# 1. Load the Training Data from 'train_data.pkl'
+# Load the Training Data from 'train_data.pkl'
 with open('/kaggle/input/ift3395-ift6390-identification-maladies-retine/train_data.pkl', 'rb') as f:
     train_data = pickle.load(f)
-
+    
+with open('data/test_data.pkl', 'rb') as f:
+        test_data = pickle.load(f)
+    
 # Run the training and evaluation
 def main():
     rf_model = train_evaluate_random_forest(
@@ -204,6 +207,19 @@ def main():
         test_size=0.1,  # 10% for mini test set
         val_size=0.1   # 10% of remaining for validation set
     )
+    X_test = np.array(test_data['images'], dtype=np.float32) / 255.0
+    
+    # Predict on test data
+    print("Predicting on test data...")
+    test_predictions = rf.predict(X_test)
+    
+    # Save predictions
+    submission = pd.DataFrame({
+        'ID': np.arange(len(test_predictions)),
+        'Class': test_predictions
+    })
+    submission.to_csv('submission_rf_scratch.csv', index=False)
+    print("Submission saved as 'submission_rf_scratch.csv'.")
 
 if __name__ == "__main__":
     main()
