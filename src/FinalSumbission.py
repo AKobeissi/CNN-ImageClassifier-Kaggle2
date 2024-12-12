@@ -61,12 +61,18 @@ print("Class distribution:", class_counts)
 # Shuffle and Split the Data
 images, labels = shuffle(images, labels, random_state=42)
 
-# Split into training and validation sets with stratification
+# Split into training + validation and mini test sets (90% train+val, 10% mini test)
+train_val_images, mini_test_images, train_val_labels, mini_test_labels = train_test_split(
+    images, labels, test_size=0.1, random_state=42, stratify=labels)
+
+# Further split the training + validation set into training and validation sets (80% train, 10% val)
 train_images, val_images, train_labels, val_labels = train_test_split(
-    images, labels, test_size=0.2, random_state=42, stratify=labels)
+    train_val_images, train_val_labels, test_size=0.1111, random_state=42, stratify=train_val_labels)
+# (10% of 90% = ~10% validation)
 
 print(f'Number of training examples: {train_labels.shape[0]}')
 print(f'Number of validation examples: {val_labels.shape[0]}')
+print(f'Number of mini test examples: {mini_test_labels.shape[0]}')
 
 # Data Augmentation
 datagen = ImageDataGenerator(
@@ -232,6 +238,30 @@ plt.show()
 # Classification Report
 print("Classification Report:\n")
 print(classification_report(val_labels, val_pred_labels, target_names=class_names))
+
+# Evaluate the Model on the Mini Test Set
+mini_test_loss, mini_test_accuracy = model_improved.evaluate(mini_test_images, mini_test_labels, verbose=0)
+print(f'Mini Test Loss: {mini_test_loss:.4f}')
+print(f'Mini Test Accuracy: {mini_test_accuracy*100:.2f}%')
+
+# Predict on the Mini Test Set
+mini_test_predictions = model_improved.predict(mini_test_images)
+mini_test_pred_labels = np.argmax(mini_test_predictions, axis=1)
+
+# Confusion Matrix for Mini Test Set
+cm_mini_test = confusion_matrix(mini_test_labels, mini_test_pred_labels)
+plt.figure(figsize=(6,5))
+sns.heatmap(cm_mini_test, annot=True, fmt='d', cmap='Blues',
+            xticklabels=class_names,
+            yticklabels=class_names)
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix on Mini Test Set')
+plt.show()
+
+# Classification Report for Mini Test Set
+print("Classification Report on Mini Test Set:\n")
+print(classification_report(mini_test_labels, mini_test_pred_labels, target_names=class_names))
 
 with open('/kaggle/input/ift3395-ift6390-identification-maladies-retine/test_data.pkl', 'rb') as f:
     test_data = pickle.load(f)
