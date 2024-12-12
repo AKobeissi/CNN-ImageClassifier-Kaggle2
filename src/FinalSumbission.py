@@ -215,6 +215,60 @@ def plot_accuracy_loss_chart(history):
 
 plot_accuracy_loss_chart(history)
 
+# For hyperparameter tuning
+def train_resnet_with_params(learning_rate, batch_size, conv_dropout, dense_dropout):
+    """
+    Train ResNet with specific hyperparameters and return validation accuracy
+    """
+    model = create_resnet_model(conv_dropout, dense_dropout)
+    
+    optimizer = Adam(learning_rate=learning_rate)
+    model.compile(optimizer=optimizer,
+                 loss='sparse_categorical_crossentropy',
+                 metrics=['accuracy'])
+    
+    early_stop = EarlyStopping(monitor='val_loss', patience=10, 
+                              restore_best_weights=True, verbose=1)
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, 
+                                 patience=5, min_lr=1e-6, verbose=1)
+    
+    history = model.fit(
+        datagen.flow(train_images, train_labels, batch_size=batch_size),
+        steps_per_epoch=train_labels.shape[0] // batch_size,
+        epochs=30,
+        validation_data=(val_images, val_labels),
+        callbacks=[early_stop, reduce_lr],
+        class_weight=class_weights,
+        verbose=0
+    )
+    
+    return max(history.history['val_accuracy'])
+  
+# # Hyperparameter configurations to test
+# configs = [
+#     {'lr': 0.001, 'batch_size': 64, 'conv_dropout': 0.25, 'dense_dropout': 0.5},  # baseline
+#     {'lr': 0.01, 'batch_size': 64, 'conv_dropout': 0.25, 'dense_dropout': 0.5},
+#     {'lr': 0.0001, 'batch_size': 64, 'conv_dropout': 0.25, 'dense_dropout': 0.5},
+#     {'lr': 0.001, 'batch_size': 32, 'conv_dropout': 0.25, 'dense_dropout': 0.5},
+#     {'lr': 0.001, 'batch_size': 128, 'conv_dropout': 0.25, 'dense_dropout': 0.5},
+#     {'lr': 0.001, 'batch_size': 64, 'conv_dropout': 0.1, 'dense_dropout': 0.3},
+#     {'lr': 0.001, 'batch_size': 64, 'conv_dropout': 0.4, 'dense_dropout': 0.6}
+# ]
+
+# results = []
+# for config in configs:
+#     val_acc = train_resnet_with_params(
+#         config['lr'], 
+#         config['batch_size'], 
+#         config['conv_dropout'], 
+#         config['dense_dropout']
+#     )
+#     results.append({**config, 'val_accuracy': val_acc})
+
+# results_df = pd.DataFrame(results)
+# print("ResNet Hyperparameter Tuning Results:")
+# print(results_df.sort_values('val_accuracy', ascending=False))
+
 # Evaluate the Model on Validation Set
 val_loss, val_accuracy = model_improved.evaluate(val_images, val_labels, verbose=0)
 print(f'Validation Loss: {val_loss:.4f}')
@@ -281,12 +335,3 @@ submission = pd.DataFrame({
 })
 
 submission.to_csv('submission_CNN_augmented.csv', index=False)
-
-# Optionally, display a few predictions
-fig, axes = plt.subplots(2,5, figsize=(15,6))
-for i, ax in enumerate(axes.flatten()[:10]):
-    ax.imshow(test_images[i].reshape(28,28), cmap='gray')
-    ax.set_title(f'Predicted: {class_names[test_pred_labels[i]]}')
-    ax.axis('off')
-plt.tight_layout()
-plt.show()
