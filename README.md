@@ -1,4 +1,7 @@
-# CNN-ImageClassifier-Kaggle2
+# Kaggle competition 2 
+
+Team: Amine & Danil 
+Students: Amine Kobeissi, Danil Garmaev
 
 This repository contains a collection of machine learning models and associated files designed for classifying images using Convolutional Neural Networks (CNN) and other models. It includes code for training, testing, and evaluating image classifiers using several techniques, including Logistic Regression, Support Vector Machine (SVM), Random Forest, and U-Net for segmentation tasks.
 
