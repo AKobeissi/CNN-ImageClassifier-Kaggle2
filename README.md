@@ -1,9 +1,10 @@
 # Kaggle competition 2 
 
 Team: Amine & Danil 
+
 Students: Amine Kobeissi, Danil Garmaev
 
-This repository contains a collection of machine learning models and associated files designed for classifying images using Convolutional Neural Networks (CNN) and other models. It includes code for training, testing, and evaluating image classifiers using several techniques, including Logistic Regression, Support Vector Machine (SVM), Random Forest, and U-Net for segmentation tasks.
+This repository contains a collection of machine learning models designed for classifying images using Convolutional Neural Networks (CNN) and other models. It includes code for training, testing, and evaluating image classifiers using several techniques, including Logistic Regression, Support Vector Machine (SVM), Random Forest, ResNet and U-Net.
 
 
 ## Overview
@@ -14,11 +15,9 @@ This repository contains a collection of machine learning models and associated 
 
 - **Random Forest (RandomForest.py)**: This model used a Random Forest algorithm and outperformed the baseline model, providing a solid alternative to more complex deep learning models.
 
-- **U-Net (UNET.ipynb)**: A Jupyter Notebook for performing image segmentation using the U-Net architecture. This notebook is meant to be run in Kaggle’s notebook environment.
+- **U-Net (UNET.ipynb)**: A Jupyter Notebook for performing image classification using the U-Net architecture. This notebook is meant to be run in Kaggle’s notebook environment.
 
-- **Logistic Regression (logreg.py)**: A basic logistic regression classifier, used as a baseline for comparison with more advanced models.
-
-- **Support Vector Machine (SVM.py)**: Implements an SVM classifier, useful for linear and non-linear image classification tasks.
+- **Logistic Regression (logregAndSVM.py)**: A basic logistic regression classifier, used as a baseline for comparison with more advanced models. **Support Vector Machine **: Implements an SVM classifier, useful for linear and non-linear image classification tasks.
 
 ## Dataset
 
