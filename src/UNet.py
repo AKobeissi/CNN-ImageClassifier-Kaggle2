@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 
-with open ("/kaggle/input/dataset/train_data.pkl", "rb") as f :
+with open ("/kaggle/input/ift3395-ift6390-identification-maladies-retine/train_data.pkl", "rb") as f :
     data_train = pickle.load(f)
 
-with open ("/kaggle/input/dataset/test_data.pkl", "rb") as f :
+with open ("/kaggle/input/ift3395-ift6390-identification-maladies-retine/test_data.pkl", "rb") as f :
     data_test = pickle.load(f)
 
 X_train, train_labels = data_train['images'], data_train['labels']

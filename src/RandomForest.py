@@ -196,7 +196,7 @@ def train_evaluate_random_forest(train_file, sample_size=10000, test_size=0.1, v
 with open('/kaggle/input/ift3395-ift6390-identification-maladies-retine/train_data.pkl', 'rb') as f:
     train_data = pickle.load(f)
     
-with open('data/test_data.pkl', 'rb') as f:
+with open('/kaggle/input/ift3395-ift6390-identification-maladies-retine/test_data.pkl', 'rb') as f:
         test_data = pickle.load(f)
     
 # Run the training and evaluation
