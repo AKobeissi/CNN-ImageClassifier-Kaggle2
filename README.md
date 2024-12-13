@@ -2,12 +2,6 @@
 
 This repository contains a collection of machine learning models and associated files designed for classifying images using Convolutional Neural Networks (CNN) and other models. It includes code for training, testing, and evaluating image classifiers using several techniques, including Logistic Regression, Support Vector Machine (SVM), Random Forest, and U-Net for segmentation tasks.
 
-## Project Structure
-
-The project is organized as follows:
-
-CNN-ImageClassifier-Kaggle2/ │ ├── FinalSubmission.py # Final Kaggle submission using ResNet (private model) ├── RandomForest.py # Random Forest classifier (model that beat the baseline) ├── UNET.ipynb # Jupyter Notebook for U-Net segmentation (run in Kaggle) ├── logreg.py # Logistic Regression classifier code ├── SVM.py # Support Vector Machine classifier code ├── data/ # Dataset folder (path: /kaggle/input/ift3395-ift6390-identification-maladies-retine) │ ├── train_data.pkl # Training dataset │ └── test_data.pkl # Test dataset ├── README.md # Project documentation (this file) └── requirements.txt # List of Python dependencies
-
 
 ## Overview
 
