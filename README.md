@@ -4,7 +4,7 @@ Team: Amine & Danil
 
 Students: Amine Kobeissi, Danil Garmaev
 
-This repository contains a collection of machine learning models designed for classifying images using Convolutional Neural Networks (CNN) and other models. It includes code for training, testing, and evaluating image classifiers using several techniques, including Logistic Regression, Support Vector Machine (SVM), Random Forest, ResNet and U-Net.
+This repository contains a collection of machine learning models designed for classifying images using Convolutional Neural Networks (CNN) and other models. It includes code for training, testing, and evaluating image classifiers using several techniques, including Logistic Regression, Support Vector Machine (SVM), Random Forest, ResNet and U-Net. The custom ResNet provided the best solution, resulting in 3rd place in the Kaggle Competition.
 
 
 ## Overview
